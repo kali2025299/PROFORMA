@@ -14,21 +14,10 @@
     <!-- Panel de Control (No sale en las descargas) -->
     <div class="panel-control no-print">
         <h2>PROFORMA NITRO</h2>
-        <div class="controles-acciones-agrupadas">
-            <div class="fila-botones">
-                <button onclick="agregarFila()" class="btn-verde">+ Agregar Producto</button>
-                <button onclick="descargarPDF()" class="btn-rojo">DESCARGAR📥 PDF</button>
-                <button onclick="descargarJPG()" class="btn-azul">DESCARGAR📷 JPG</button>
-            </div>
-            <div class="fila-botones" style="position: relative; width: 100%;">
-                <button onclick="toggleMenuWhatsApp()" class="btn-whatsapp">💬 Enviar WhatsApp (Elegir y Abrir)</button>
-                
-                <!-- Menú desplegable flotante de WhatsApp -->
-                <div id="menu-whatsapp" class="menu-whatsapp-flotante" style="display: none;">
-                    <button onclick="enviarWhatsAppConArchivo('pdf')" class="opcion-menu-wsp">📄 Descargar PDF y Abrir Chat</button>
-                    <button onclick="enviarWhatsAppConArchivo('jpg')" class="opcion-menu-wsp">🖼️ Descargar JPG y Abrir Chat</button>
-                </div>
-            </div>
+        <div class="fila-botones">
+            <button onclick="agregarFila()" class="btn-verde">+ Agregar Producto</button>
+            <button onclick="descargarPDF()" class="btn-rojo">📥 Descargar PDF</button>
+            <button onclick="descargarJPG()" class="btn-azul">📷 Descargar JPG</button>
         </div>
     </div>
 
@@ -74,7 +63,7 @@
             </div>
             <div class="campo-linea">
                 <label>Celular:</label>
-                <input type="tel" id="cliente-celular" placeholder="Número de WhatsApp (ej: 999999999)">
+                <input type="tel" id="cliente-celular" placeholder="Número de contacto">
             </div>
         </div>
 
@@ -125,7 +114,7 @@
 
     </div>
 
-    <!-- Script de Funcionalidad, Exportación y Menú de WhatsApp -->
+    <!-- Script de Funcionalidad y Exportación Centrada -->
     <script>
         function cargarFechaActual() {
             const hoy = new Date();
@@ -230,20 +219,49 @@
             });
         }
 
+        // PDF con envoltura temporal para forzar centrado absoluto en hoja A4
         function descargarPDF() {
             activarModoCaptura();
-            const elemento = document.getElementById('proforma');
+            const elementoOriginal = document.getElementById('proforma');
+
+            const contenedorTemporal = document.createElement('div');
+            contenedorTemporal.style.position = 'absolute';
+            contenedorTemporal.style.left = '-9999px';
+            contenedorTemporal.style.top = '0';
+            contenedorTemporal.style.width = '794px';
+            contenedorTemporal.style.backgroundColor = '#ffffff';
+            contenedorTemporal.style.padding = '15px';
+            contenedorTemporal.style.boxSizing = 'border-box';
+
+            const clon = elementoOriginal.cloneNode(true);
+            clon.style.width = '100%';
+            clon.style.maxWidth = '750px';
+            clon.style.margin = '0 auto';
+            clon.style.border = '1px solid #000';
+            clon.style.boxShadow = 'none';
+            contenedorTemporal.appendChild(clon);
+            document.body.appendChild(contenedorTemporal);
+
             const opciones = {
                 margin:       5,
                 filename:     'proforma-nitrosport.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, windowWidth: 800 },
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true, 
+                    letterRendering: true,
+                    windowWidth: 794 
+                },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait', autoPaging: true }
             };
-            
-            html2pdf().from(elemento).set(opciones).save().then(() => {
+
+            html2pdf().from(clon).set(opciones).save().then(() => {
+                document.body.removeChild(contenedorTemporal);
                 desactivarModoCaptura();
             }).catch(() => {
+                if (document.body.contains(contenedorTemporal)) {
+                    document.body.removeChild(contenedorTemporal);
+                }
                 desactivarModoCaptura();
             });
         }
@@ -261,43 +279,6 @@
             }).catch(() => {
                 desactivarModoCaptura();
             });
-        }
-
-        // Muestra u oculta el menú flotante al hacer clic en WhatsApp
-        function toggleMenuWhatsApp() {
-            const menu = document.getElementById('menu-whatsapp');
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-        }
-
-        // Descarga el archivo elegido y abre el chat del cliente en WhatsApp
-        function enviarWhatsAppConArchivo(tipo) {
-            // Ocultar menú
-            document.getElementById('menu-whatsapp').style.display = 'none';
-
-            // 1. Descargar el archivo seleccionado
-            if (tipo === 'pdf') {
-                descargarPDF();
-            } else {
-                descargarJPG();
-            }
-
-            // 2. Abrir WhatsApp con el saludo al cliente
-            setTimeout(() => {
-                const cliente = document.getElementById('cliente-nombre').value || 'estimado cliente';
-                const celular = document.getElementById('cliente-celular').value.trim();
-
-                let mensaje = `Hola *${cliente}*, aquí le enviamos su proforma de *NITRO SPORT* (Galería La Casona). ¡Quedamos a su disposición! ⚽`;
-
-                const textoCodificado = encodeURIComponent(mensaje);
-                let url = `https://api.whatsapp.com/send?text=${textoCodificado}`;
-                
-                if (celular !== '') {
-                    const numeroLimpio = celular.replace(/\D/g, '');
-                    url = `https://api.whatsapp.com/send?phone=51${numeroLimpio}&text=${textoCodificado}`;
-                }
-
-                window.open(url, '_blank');
-            }, 800); // Pequeña pausa para asegurar que inicie la descarga del archivo primero
         }
     </script>
 </body>
