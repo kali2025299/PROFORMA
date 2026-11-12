@@ -2,7 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Proformas NITRO</title>
+    <!-- Etiqueta indispensable para que se adapte al celular sin hacer zoom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Generador de Proformas - NITRO SPORT</title>
     <link rel="stylesheet" href="style.css">
     <!-- Librerías para exportar a PDF y JPG -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -12,12 +14,12 @@
 
     <!-- Panel de Control (No sale en las descargas) -->
     <div class="panel-control no-print">
-        <h2>PROFORMA NITRO </h2>
+        <h2>PROFORMA NITRO</h2>
         <div class="controles-acciones-agrupadas">
             <div class="fila-botones">
                 <button onclick="agregarFila()" class="btn-verde">+ Agregar Producto</button>
-                <button onclick="descargarPDF()" class="btn-rojo">📥 Descargar PDF</button>
-                <button onclick="descargarJPG()" class="btn-azul">📷 Descargar JPG</button>
+                <button onclick="descargarPDF()" class="btn-rojo">📥 PDF</button>
+                <button onclick="descargarJPG()" class="btn-azul">📷 JPG</button>
             </div>
             <div class="fila-botones">
                 <button onclick="enviarWhatsApp()" class="btn-whatsapp">💬 Enviar WhatsApp</button>
@@ -31,7 +33,6 @@
         <!-- Cabecera -->
         <header class="header-top">
             <div class="logo-info">
-                <!-- Imagen del Logo oficial de NITRO SPORT[cite: 2] -->
                 <img src="LOGO NITRO.jpg" alt="NITRO SPORT" class="logo-img">
                 
                 <p class="subtitle">VENTA DE BUZOS, SHORTS, POLOS DE ALGODÓN, CAMISETAS DEPORTIVAS, MEDIAS, CHIMPUNERAS, MALETERAS.</p>
@@ -68,32 +69,33 @@
             </div>
             <div class="campo-linea">
                 <label>Celular:</label>
-                <input type="text" id="cliente-celular" placeholder="Número de WhatsApp (ej: 999999999)">
+                <input type="tel" id="cliente-celular" placeholder="Número de WhatsApp (ej: 999999999)">
             </div>
         </div>
 
         <!-- Tabla de Ítems Dinámica -->
-        <table class="tabla-detalle" id="tabla-productos">
-            <thead>
-                <tr>
-                    <th class="col-cant">CANT.</th>
-                    <th class="col-desc">D E S C R I P C I Ó N</th>
-                    <th class="col-punit">P. UNIT.</th>
-                    <th class="col-importe">IMPORTE</th>
-                    <th class="no-print col-accion">🗑️</th>
-                </tr>
-            </thead>
-            <tbody id="cuerpo-tabla">
-                <!-- Fila inicial de ejemplo -->
-                <tr>
-                    <td><input type="number" class="input-cant" value="40" oninput="calcularTotales()"></td>
-                    <td><input type="text" class="input-desc" value="CAMISETA EN TELA INTERFIT (TODO SUBLIMADO DIGITAL) TALLA: 16-S-M-L"></td>
-                    <td><input type="number" step="0.01" class="input-punit" value="23.00" oninput="calcularTotales()"></td>
-                    <td class="text-right importe-celda">s/ 920.00</td>
-                    <td class="no-print text-center"><button onclick="eliminarFila(this)" class="btn-eliminar">X</button></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="tabla-responsive">
+            <table class="tabla-detalle" id="tabla-productos">
+                <thead>
+                    <tr>
+                        <th class="col-cant">CANT.</th>
+                        <th class="col-desc">D E S C R I P C I Ó N</th>
+                        <th class="col-punit">P. UNIT.</th>
+                        <th class="col-importe">IMPORTE</th>
+                        <th class="no-print col-accion">🗑️</th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpo-tabla">
+                    <tr>
+                        <td><input type="number" class="input-cant" value="40" oninput="calcularTotales()"></td>
+                        <td><input type="text" class="input-desc" value="CAMISETA EN TELA INTERFIT (TODO SUBLIMADO DIGITAL) TALLA: 16-S-M-L"></td>
+                        <td><input type="number" step="0.01" class="input-punit" value="23.00" oninput="calcularTotales()"></td>
+                        <td class="text-right importe-celda">s/ 920.00</td>
+                        <td class="no-print text-center"><button onclick="eliminarFila(this)" class="btn-eliminar">X</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <!-- Sección de Totales, A cuenta y Saldo -->
         <div class="seccion-total">
@@ -136,7 +138,7 @@
             const nuevaFila = document.createElement('tr');
             nuevaFila.innerHTML = `
                 <td><input type="number" class="input-cant" value="1" oninput="calcularTotales()"></td>
-                <td><input type="text" class="input-desc" placeholder="Descripción del producto o talla"></td>
+                <td><input type="text" class="input-desc" placeholder="Descripción o talla"></td>
                 <td><input type="number" step="0.01" class="input-punit" value="0.00" oninput="calcularTotales()"></td>
                 <td class="text-right importe-celda">s/ 0.00</td>
                 <td class="no-print text-center"><button onclick="eliminarFila(this)" class="btn-eliminar">X</button></td>
@@ -175,25 +177,38 @@
             document.getElementById('monto-saldo').textContent = `s/ ${saldoGlobal.toFixed(2)}`;
         }
 
-        function descargarPDF() {
+        function prepararParaExportar(callback) {
             const elemento = document.getElementById('proforma');
-            const opciones = {
-                margin:       5,
-                filename:     'proforma-nitrosport.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait', autoPaging: true }
-            };
-            html2pdf().from(elemento).set(opciones).save();
+            elemento.classList.add('modo-exportacion');
+            setTimeout(() => {
+                callback(elemento);
+                setTimeout(() => {
+                    elemento.classList.remove('modo-exportacion');
+                }, 500);
+            }, 100);
+        }
+
+        function descargarPDF() {
+            prepararParaExportar((elemento) => {
+                const opciones = {
+                    margin:       5,
+                    filename:     'proforma-nitrosport.pdf',
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2, useCORS: true, windowWidth: 800 },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait', autoPaging: true }
+                };
+                html2pdf().from(elemento).set(opciones).save();
+            });
         }
 
         function descargarJPG() {
-            const elemento = document.getElementById('proforma');
-            html2canvas(elemento, { scale: 2 }).then(canvas => {
-                const enlace = document.createElement('a');
-                enlace.download = 'proforma-nitrosport.jpg';
-                enlace.href = canvas.toDataURL('image/jpeg', 0.98);
-                enlace.click();
+            prepararParaExportar((elemento) => {
+                html2canvas(elemento, { scale: 2, windowWidth: 800 }).then(canvas => {
+                    const enlace = document.createElement('a');
+                    enlace.download = 'proforma-nitrosport.jpg';
+                    enlace.href = canvas.toDataURL('image/jpeg', 0.98);
+                    enlace.click();
+                });
             });
         }
 

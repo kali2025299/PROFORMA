@@ -2,12 +2,14 @@ body {
     background-color: #222;
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 20px;
+    padding: 15px;
+    box-sizing: border-box;
 }
 
-/* Panel superior de botones flotantes */
+/* Panel superior de botones */
 .panel-control {
-    width: 210mm;
+    width: 100%;
+    max-width: 210mm;
     margin: 0 auto 15px auto;
     background: #333;
     padding: 12px;
@@ -16,6 +18,8 @@ body {
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .panel-control h2 {
@@ -34,14 +38,16 @@ body {
 .fila-botones {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .fila-botones button {
-    padding: 8px 14px;
+    padding: 9px 14px;
     font-weight: bold;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 13px;
 }
 
 .btn-verde { background-color: #28a745; color: white; }
@@ -56,7 +62,8 @@ body {
 
 /* Contenedor de la Proforma */
 .proforma-container {
-    width: 210mm;
+    width: 100%;
+    max-width: 210mm;
     min-height: auto;
     background: #fff;
     margin: 0 auto;
@@ -64,6 +71,13 @@ body {
     box-sizing: border-box;
     border: 1px solid #000;
     position: relative;
+}
+
+/* Fuerza el tamaño A4 exacto al exportar desde el celular */
+.modo-exportacion {
+    width: 210mm !important;
+    max-width: 210mm !important;
+    padding: 12mm 15mm !important;
 }
 
 /* Cabecera */
@@ -74,6 +88,7 @@ body {
     border-bottom: 2px solid #000;
     padding-bottom: 8px;
     margin-bottom: 12px;
+    gap: 10px;
 }
 
 .logo-info {
@@ -83,6 +98,7 @@ body {
 
 .logo-img {
     max-width: 270px;
+    width: 100%;
     height: auto;
     display: block;
     margin: 0 auto 4px auto;
@@ -117,7 +133,7 @@ body {
 
 .tabla-fecha th { background-color: #bbb; border: 1px solid #000; padding: 2px; }
 .tabla-fecha td { border: 1px solid #000; padding: 2px; }
-.input-fecha { width: 25px; border: none; text-align: center; font-weight: bold; font-size: 11px; background: transparent; outline: none; }
+.input-fecha { width: 25px; border: none; text-align: center; font-weight: bold; font-size: 12px; background: transparent; outline: none; }
 
 /* Datos del cliente */
 .seccion-cliente {
@@ -128,22 +144,29 @@ body {
 
 .campo-linea {
     display: flex;
-    margin-bottom: 5px;
+    align-items: center;
+    margin-bottom: 6px;
     border-bottom: 1px dotted #000;
     padding-bottom: 3px;
 }
 
-.campo-linea label { width: 85px; }
+.campo-linea label { width: 85px; flex-shrink: 0; }
 .campo-linea input {
     flex-grow: 1;
+    width: 100%;
     border: none;
-    font-size: 12px;
+    font-size: 14px; /* Evita zoom automático en iOS/Android */
     font-family: Arial, sans-serif;
     outline: none;
     background: transparent;
 }
 
 /* Tabla Principal */
+.tabla-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
 .tabla-detalle {
     width: 100%;
     border-collapse: collapse;
@@ -154,18 +177,18 @@ body {
 .tabla-detalle th {
     border: 1px solid #000;
     background-color: #dcdcdc;
-    padding: 5px;
+    padding: 6px 4px;
     font-weight: bold;
     text-align: center;
 }
 
 .tabla-detalle td {
     border: 1px solid #000;
-    padding: 3px 5px;
+    padding: 4px;
 }
 
-.col-cant { width: 10%; }
-.col-desc { width: 55%; }
+.col-cant { width: 12%; }
+.col-desc { width: 53%; }
 .col-punit { width: 15%; }
 .col-importe { width: 15%; }
 .col-accion { width: 5%; }
@@ -178,7 +201,7 @@ body {
     width: 100%;
     border: none;
     text-align: center;
-    font-size: 11px;
+    font-size: 14px;
     font-family: Arial, sans-serif;
     background: transparent;
     outline: none;
@@ -187,7 +210,7 @@ body {
 .input-desc {
     width: 100%;
     border: none;
-    font-size: 11px;
+    font-size: 14px;
     font-family: Arial, sans-serif;
     background: transparent;
     outline: none;
@@ -197,7 +220,7 @@ body {
     background: #ff4d4d;
     color: white;
     border: none;
-    padding: 2px 6px;
+    padding: 4px 8px;
     cursor: pointer;
     border-radius: 3px;
     font-weight: bold;
@@ -207,7 +230,7 @@ body {
 .seccion-total {
     display: flex;
     justify-content: flex-end;
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 .bloque-totales {
@@ -226,7 +249,7 @@ body {
 .label-total {
     background-color: #fff;
     font-weight: 900;
-    padding: 5px 10px;
+    padding: 6px 10px;
     width: 100px;
     text-align: center;
     border-right: 2px solid #000;
@@ -234,11 +257,11 @@ body {
 }
 
 .monto-total {
-    padding: 5px 10px;
+    padding: 6px 10px;
     font-weight: bold;
     text-align: right;
     flex-grow: 1;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .monto-input-container {
@@ -251,7 +274,7 @@ body {
 
 .monto-input-container span {
     font-weight: bold;
-    font-size: 12px;
+    font-size: 13px;
     margin-right: 4px;
 }
 
@@ -259,7 +282,7 @@ body {
     width: 80px;
     border: none;
     text-align: right;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
     font-family: Arial, sans-serif;
     outline: none;
@@ -268,6 +291,75 @@ body {
 
 .saldo-box {
     background-color: #f9f9f9;
+}
+
+/* =========================================================
+   ADAPTACIÓN AUTOMÁTICA PARA CELULARES (Pantallas < 768px)
+   ========================================================= */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 8px;
+    }
+
+    .panel-control {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .controles-acciones-agrupadas {
+        align-items: stretch;
+    }
+
+    .fila-botones {
+        justify-content: space-between;
+    }
+
+    .fila-botones button {
+        flex-grow: 1;
+        padding: 10px 8px;
+    }
+
+    .proforma-container {
+        padding: 12px;
+    }
+
+    /* Acomoda la cabecera para que no se aplaste en móvil */
+    .header-top {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .fecha-box-container {
+        margin-top: 8px;
+    }
+
+    .logo-img {
+        max-width: 210px;
+    }
+
+    /* Mejora el tamaño de los campos para escribir con los dedos */
+    .campo-linea input,
+    .input-desc,
+    .input-cant,
+    .input-punit,
+    .input-acuenta {
+        font-size: 16px; /* 16px evita que Safari/Chrome hagan zoom al tocar */
+        padding: 4px 2px;
+    }
+
+    .col-cant { width: 15%; }
+    .col-desc { width: 45%; }
+    .col-punit { width: 18%; }
+    .col-importe { width: 17%; }
+
+    .seccion-total {
+        justify-content: center;
+    }
+
+    .bloque-totales, .total-box {
+        width: 100%;
+    }
 }
 
 /* Reglas de Impresión */
