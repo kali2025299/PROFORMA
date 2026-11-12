@@ -73,7 +73,7 @@ body {
     position: relative;
 }
 
-/* Fuerza el tamaño A4 exacto al exportar desde el celular */
+/* Fuerza el tamaño A4 exacto al exportar */
 .modo-exportacion {
     width: 210mm !important;
     max-width: 210mm !important;
@@ -128,12 +128,21 @@ body {
     border: 2px solid #000;
     text-align: center;
     font-size: 10px;
-    width: 100px;
+    width: 105px;
 }
 
-.tabla-fecha th { background-color: #bbb; border: 1px solid #000; padding: 2px; }
-.tabla-fecha td { border: 1px solid #000; padding: 2px; }
-.input-fecha { width: 25px; border: none; text-align: center; font-weight: bold; font-size: 12px; background: transparent; outline: none; }
+.tabla-fecha th { background-color: #bbb; border: 1px solid #000; padding: 3px; }
+.tabla-fecha td { border: 1px solid #000; padding: 3px; }
+.input-fecha { 
+    width: 26px; 
+    border: none; 
+    text-align: center; 
+    font-weight: bold; 
+    font-size: 12px; 
+    background: transparent; 
+    outline: none;
+    line-height: 1.4;
+}
 
 /* Datos del cliente */
 .seccion-cliente {
@@ -147,7 +156,7 @@ body {
     align-items: center;
     margin-bottom: 6px;
     border-bottom: 1px dotted #000;
-    padding-bottom: 3px;
+    padding-bottom: 4px;
 }
 
 .campo-linea label { width: 85px; flex-shrink: 0; }
@@ -155,10 +164,11 @@ body {
     flex-grow: 1;
     width: 100%;
     border: none;
-    font-size: 14px; /* Evita zoom automático en iOS/Android */
+    font-size: 14px;
     font-family: Arial, sans-serif;
     outline: none;
     background: transparent;
+    line-height: 1.4;
 }
 
 /* Tabla Principal */
@@ -171,7 +181,7 @@ body {
     width: 100%;
     border-collapse: collapse;
     border: 2px solid #000;
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .tabla-detalle th {
@@ -184,11 +194,12 @@ body {
 
 .tabla-detalle td {
     border: 1px solid #000;
-    padding: 4px;
+    padding: 5px;
+    vertical-align: middle;
 }
 
-.col-cant { width: 12%; }
-.col-desc { width: 53%; }
+.col-cant { width: 11%; }
+.col-desc { width: 54%; }
 .col-punit { width: 15%; }
 .col-importe { width: 15%; }
 .col-accion { width: 5%; }
@@ -196,24 +207,60 @@ body {
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 
-/* Inputs dentro de la tabla */
+/* Inputs y Textarea dentro de la tabla */
 .input-cant, .input-punit {
     width: 100%;
     border: none;
     text-align: center;
-    font-size: 14px;
+    font-size: 13px;
     font-family: Arial, sans-serif;
     background: transparent;
     outline: none;
+    line-height: 1.4;
 }
 
 .input-desc {
     width: 100%;
     border: none;
-    font-size: 14px;
+    font-size: 12px;
     font-family: Arial, sans-serif;
     background: transparent;
     outline: none;
+    resize: none;
+    overflow: hidden;
+    line-height: 1.4;
+    display: block;
+    box-sizing: border-box;
+}
+
+/* Estilos para el texto limpio al momento de exportar JPG/PDF */
+.texto-exportado {
+    display: inline-block;
+    font-family: Arial, sans-serif;
+    color: #000;
+    line-height: 1.4;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.texto-exportado.input-desc {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-size: 12px;
+}
+
+.texto-exportado.input-cant,
+.texto-exportado.input-punit,
+.texto-exportado.input-fecha {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.texto-exportado.input-acuenta {
+    text-align: right;
+    width: auto;
 }
 
 .btn-eliminar {
@@ -244,6 +291,7 @@ body {
     display: flex;
     width: 220px;
     box-sizing: border-box;
+    align-items: center;
 }
 
 .label-total {
@@ -267,7 +315,7 @@ body {
 .monto-input-container {
     display: flex;
     align-items: center;
-    padding: 2px 8px;
+    padding: 4px 10px;
     flex-grow: 1;
     justify-content: flex-end;
 }
@@ -282,11 +330,12 @@ body {
     width: 80px;
     border: none;
     text-align: right;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
     font-family: Arial, sans-serif;
     outline: none;
     background: transparent;
+    line-height: 1.4;
 }
 
 .saldo-box {
@@ -320,44 +369,38 @@ body {
         padding: 10px 8px;
     }
 
-    .proforma-container {
+    .proforma-container:not(.modo-exportacion) {
         padding: 12px;
     }
 
-    /* Acomoda la cabecera para que no se aplaste en móvil */
-    .header-top {
+    .proforma-container:not(.modo-exportacion) .header-top {
         flex-direction: column;
         align-items: center;
     }
 
-    .fecha-box-container {
+    .proforma-container:not(.modo-exportacion) .fecha-box-container {
         margin-top: 8px;
     }
 
-    .logo-img {
+    .proforma-container:not(.modo-exportacion) .logo-img {
         max-width: 210px;
     }
 
-    /* Mejora el tamaño de los campos para escribir con los dedos */
-    .campo-linea input,
-    .input-desc,
-    .input-cant,
-    .input-punit,
-    .input-acuenta {
-        font-size: 16px; /* 16px evita que Safari/Chrome hagan zoom al tocar */
+    .proforma-container:not(.modo-exportacion) .campo-linea input,
+    .proforma-container:not(.modo-exportacion) .input-desc,
+    .proforma-container:not(.modo-exportacion) .input-cant,
+    .proforma-container:not(.modo-exportacion) .input-punit,
+    .proforma-container:not(.modo-exportacion) .input-acuenta {
+        font-size: 16px;
         padding: 4px 2px;
     }
 
-    .col-cant { width: 15%; }
-    .col-desc { width: 45%; }
-    .col-punit { width: 18%; }
-    .col-importe { width: 17%; }
-
-    .seccion-total {
+    .proforma-container:not(.modo-exportacion) .seccion-total {
         justify-content: center;
     }
 
-    .bloque-totales, .total-box {
+    .proforma-container:not(.modo-exportacion) .bloque-totales,
+    .proforma-container:not(.modo-exportacion) .total-box {
         width: 100%;
     }
 }
