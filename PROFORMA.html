@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Proformas NITRO</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Librerías para exportar a PDF y JPG -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body onload="cargarFechaActual()">
+
+    <!-- Panel de Control (No sale en las descargas) -->
+    <div class="panel-control no-print">
+        <h2>PROFORMA NITRO </h2>
+        <div class="controles-acciones-agrupadas">
+            <div class="fila-botones">
+                <button onclick="agregarFila()" class="btn-verde">+ Agregar Producto</button>
+                <button onclick="descargarPDF()" class="btn-rojo">📥 Descargar PDF</button>
+                <button onclick="descargarJPG()" class="btn-azul">📷 Descargar JPG</button>
+            </div>
+            <div class="fila-botones">
+                <button onclick="enviarWhatsApp()" class="btn-whatsapp">💬 Enviar WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor Principal de la Proforma -->
+    <div class="proforma-container" id="proforma">
+        
+        <!-- Cabecera -->
+        <header class="header-top">
+            <div class="logo-info">
+                <!-- Imagen del Logo oficial de NITRO SPORT[cite: 2] -->
+                <img src="LOGO NITRO.jpg" alt="NITRO SPORT" class="logo-img">
+                
+                <p class="subtitle">VENTA DE BUZOS, SHORTS, POLOS DE ALGODÓN, CAMISETAS DEPORTIVAS, MEDIAS, CHIMPUNERAS, MALETERAS.</p>
+                <div class="badge-mayor">VENTA POR MAYOR Y MENOR</div>
+                <p class="text-atendemos">ATENDEMOS PEDIDOS A PROVINCIAS, COLEGIOS E INSTITUCIONES</p>
+                <p class="address">AV. ABANCAY 358 TDA. 208-209-210</p>
+                <p class="celular">CEL: 983 537 632</p>
+                <h2 class="galeria">GALERÍA “LA CASONA”</h2>
+            </div>
+            
+            <!-- Recuadro de Fecha Automática y Editable -->
+            <div class="fecha-box-container">
+                <table class="tabla-fecha">
+                    <tr><th colspan="3">PROFORMA</th></tr>
+                    <tr><td>DÍA</td><td>MES</td><td>AÑO</td></tr>
+                    <tr>
+                        <td><input type="text" id="dia" class="input-fecha" maxlength="2"></td>
+                        <td><input type="text" id="mes" class="input-fecha" maxlength="2"></td>
+                        <td><input type="text" id="ano" class="input-fecha" maxlength="2"></td>
+                    </tr>
+                </table>
+            </div>
+        </header>
+
+        <!-- Datos del Cliente Editables -->
+        <div class="seccion-cliente">
+            <div class="campo-linea">
+                <label>Señor(es):</label>
+                <input type="text" id="cliente-nombre" placeholder="Nombre del cliente o institución">
+            </div>
+            <div class="campo-linea">
+                <label>Dirección:</label>
+                <input type="text" id="cliente-direccion" placeholder="Dirección del cliente">
+            </div>
+            <div class="campo-linea">
+                <label>Celular:</label>
+                <input type="text" id="cliente-celular" placeholder="Número de WhatsApp (ej: 999999999)">
+            </div>
+        </div>
+
+        <!-- Tabla de Ítems Dinámica -->
+        <table class="tabla-detalle" id="tabla-productos">
+            <thead>
+                <tr>
+                    <th class="col-cant">CANT.</th>
+                    <th class="col-desc">D E S C R I P C I Ó N</th>
+                    <th class="col-punit">P. UNIT.</th>
+                    <th class="col-importe">IMPORTE</th>
+                    <th class="no-print col-accion">🗑️</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpo-tabla">
+                <!-- Fila inicial de ejemplo -->
+                <tr>
+                    <td><input type="number" class="input-cant" value="40" oninput="calcularTotales()"></td>
+                    <td><input type="text" class="input-desc" value="CAMISETA EN TELA INTERFIT (TODO SUBLIMADO DIGITAL) TALLA: 16-S-M-L"></td>
+                    <td><input type="number" step="0.01" class="input-punit" value="23.00" oninput="calcularTotales()"></td>
+                    <td class="text-right importe-celda">s/ 920.00</td>
+                    <td class="no-print text-center"><button onclick="eliminarFila(this)" class="btn-eliminar">X</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Sección de Totales, A cuenta y Saldo -->
+        <div class="seccion-total">
+            <div class="bloque-totales">
+                <div class="total-box">
+                    <span class="label-total">TOTAL</span>
+                    <span class="monto-total" id="monto-total">s/ 920.00</span>
+                </div>
+                <div class="total-box">
+                    <span class="label-total">A CUENTA</span>
+                    <div class="monto-input-container">
+                        <span>s/</span>
+                        <input type="number" step="0.01" id="input-acuenta" class="input-acuenta" value="0.00" oninput="calcularTotales()">
+                    </div>
+                </div>
+                <div class="total-box saldo-box">
+                    <span class="label-total">SALDO</span>
+                    <span class="monto-total" id="monto-saldo">s/ 920.00</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script de Funcionalidad, Fecha, Cálculos y WhatsApp -->
+    <script>
+        function cargarFechaActual() {
+            const hoy = new Date();
+            const d = String(hoy.getDate()).padStart(2, '0');
+            const m = String(hoy.getMonth() + 1).padStart(2, '0');
+            const a = String(hoy.getFullYear()).slice(-2);
+
+            document.getElementById('dia').value = d;
+            document.getElementById('mes').value = m;
+            document.getElementById('ano').value = a;
+        }
+
+        function agregarFila() {
+            const tbody = document.getElementById('cuerpo-tabla');
+            const nuevaFila = document.createElement('tr');
+            nuevaFila.innerHTML = `
+                <td><input type="number" class="input-cant" value="1" oninput="calcularTotales()"></td>
+                <td><input type="text" class="input-desc" placeholder="Descripción del producto o talla"></td>
+                <td><input type="number" step="0.01" class="input-punit" value="0.00" oninput="calcularTotales()"></td>
+                <td class="text-right importe-celda">s/ 0.00</td>
+                <td class="no-print text-center"><button onclick="eliminarFila(this)" class="btn-eliminar">X</button></td>
+            `;
+            tbody.appendChild(nuevaFila);
+            calcularTotales();
+        }
+
+        function eliminarFila(btn) {
+            const fila = btn.closest('tr');
+            fila.remove();
+            calcularTotales();
+        }
+
+        let totalGeneralGlobal = 920;
+        let saldoGlobal = 920;
+
+        function calcularTotales() {
+            const filas = document.querySelectorAll('#cuerpo-tabla tr');
+            totalGeneralGlobal = 0;
+
+            filas.forEach(fila => {
+                const cant = parseFloat(fila.querySelector('.input-cant').value) || 0;
+                const punit = parseFloat(fila.querySelector('.input-punit').value) || 0;
+                const importe = cant * punit;
+
+                fila.querySelector('.importe-celda').textContent = `s/ ${importe.toFixed(2)}`;
+                totalGeneralGlobal += importe;
+            });
+
+            document.getElementById('monto-total').textContent = `s/ ${totalGeneralGlobal.toFixed(2)}`;
+
+            const aCuenta = parseFloat(document.getElementById('input-acuenta').value) || 0;
+            saldoGlobal = totalGeneralGlobal - aCuenta;
+
+            document.getElementById('monto-saldo').textContent = `s/ ${saldoGlobal.toFixed(2)}`;
+        }
+
+        function descargarPDF() {
+            const elemento = document.getElementById('proforma');
+            const opciones = {
+                margin:       5,
+                filename:     'proforma-nitrosport.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait', autoPaging: true }
+            };
+            html2pdf().from(elemento).set(opciones).save();
+        }
+
+        function descargarJPG() {
+            const elemento = document.getElementById('proforma');
+            html2canvas(elemento, { scale: 2 }).then(canvas => {
+                const enlace = document.createElement('a');
+                enlace.download = 'proforma-nitrosport.jpg';
+                enlace.href = canvas.toDataURL('image/jpeg', 0.98);
+                enlace.click();
+            });
+        }
+
+        function enviarWhatsApp() {
+            const cliente = document.getElementById('cliente-nombre').value || 'Cliente';
+            const celular = document.getElementById('cliente-celular').value.trim();
+            const dia = document.getElementById('dia').value;
+            const mes = document.getElementById('mes').value;
+            const ano = document.getElementById('ano').value;
+            const aCuenta = document.getElementById('input-acuenta').value || '0.00';
+
+            let mensaje = `*NITRO SPORT* ⚽\n`;
+            mensaje += `📅 Fecha: ${dia}/${mes}/${20+ano}\n`;
+            mensaje += `👤 Cliente: ${cliente}\n\n`;
+            mensaje += `*DETALLE DE PEDIDO:*\n`;
+
+            const filas = document.querySelectorAll('#cuerpo-tabla tr');
+            filas.forEach(fila => {
+                const cant = fila.querySelector('.input-cant').value;
+                const desc = fila.querySelector('.input-desc').value;
+                const importe = fila.querySelector('.importe-celda').textContent;
+                mensaje = mensaje + `- ${cant} un. | ${desc} -> *${importe}*\n`;
+            });
+
+            mensaje += `\n💰 *TOTAL:* s/ ${totalGeneralGlobal.toFixed(2)}\n`;
+            mensaje += `💵 *A CUENTA:* s/ ${parseFloat(aCuenta).toFixed(2)}\n`;
+            mensaje += `📌 *SALDO:* s/ ${saldoGlobal.toFixed(2)}\n\n`;
+            mensaje += `¡Gracias por su preferencia en *NITRO SPORT* (Galería La Casona)!`;
+
+            const textoCodificado = encodeURIComponent(mensaje);
+            let url = `https://api.whatsapp.com/send?text=${textoCodificado}`;
+            
+            if (celular !== '') {
+                const numeroLimpio = celular.replace(/\D/g, '');
+                url = `https://api.whatsapp.com/send?phone=51${numeroLimpio}&text=${textoCodificado}`;
+            }
+
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>

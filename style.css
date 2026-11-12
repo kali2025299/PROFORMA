@@ -1,0 +1,278 @@
+body {
+    background-color: #222;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Panel superior de botones flotantes */
+.panel-control {
+    width: 210mm;
+    margin: 0 auto 15px auto;
+    background: #333;
+    padding: 12px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.panel-control h2 {
+    color: #fff;
+    font-size: 16px;
+    margin: 0;
+}
+
+.controles-acciones-agrupadas {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.fila-botones {
+    display: flex;
+    gap: 8px;
+}
+
+.fila-botones button {
+    padding: 8px 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-verde { background-color: #28a745; color: white; }
+.btn-rojo { background-color: #dc3545; color: white; }
+.btn-azul { background-color: #007bff; color: white; }
+.btn-whatsapp { background-color: #25d366; color: white; width: 100%; text-align: center; }
+
+.btn-verde:hover { background-color: #218838; }
+.btn-rojo:hover { background-color: #c82333; }
+.btn-azul:hover { background-color: #0056b3; }
+.btn-whatsapp:hover { background-color: #1ebe5d; }
+
+/* Contenedor de la Proforma */
+.proforma-container {
+    width: 210mm;
+    min-height: auto;
+    background: #fff;
+    margin: 0 auto;
+    padding: 12mm 15mm;
+    box-sizing: border-box;
+    border: 1px solid #000;
+    position: relative;
+}
+
+/* Cabecera */
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid #000;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+}
+
+.logo-info {
+    text-align: center;
+    flex-grow: 1;
+}
+
+.logo-img {
+    max-width: 270px;
+    height: auto;
+    display: block;
+    margin: 0 auto 4px auto;
+}
+
+.subtitle { font-size: 9px; font-weight: bold; margin: 4px 0; text-transform: uppercase; }
+
+.badge-mayor {
+    background-color: #000;
+    color: #fff;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 12px;
+    display: inline-block;
+    border-radius: 10px;
+    margin: 2px 0;
+}
+
+.text-atendemos { font-size: 9px; font-weight: bold; margin: 2px 0; }
+.address { font-size: 12px; font-weight: bold; margin: 4px 0 2px 0; }
+.celular { font-size: 11px; font-weight: bold; margin: 2px 0; }
+.galeria { font-size: 16px; font-weight: 900; margin: 4px 0 0 0; font-style: italic; }
+
+/* Tabla de fecha */
+.tabla-fecha {
+    border-collapse: collapse;
+    border: 2px solid #000;
+    text-align: center;
+    font-size: 10px;
+    width: 100px;
+}
+
+.tabla-fecha th { background-color: #bbb; border: 1px solid #000; padding: 2px; }
+.tabla-fecha td { border: 1px solid #000; padding: 2px; }
+.input-fecha { width: 25px; border: none; text-align: center; font-weight: bold; font-size: 11px; background: transparent; outline: none; }
+
+/* Datos del cliente */
+.seccion-cliente {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.campo-linea {
+    display: flex;
+    margin-bottom: 5px;
+    border-bottom: 1px dotted #000;
+    padding-bottom: 3px;
+}
+
+.campo-linea label { width: 85px; }
+.campo-linea input {
+    flex-grow: 1;
+    border: none;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    outline: none;
+    background: transparent;
+}
+
+/* Tabla Principal */
+.tabla-detalle {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #000;
+    font-size: 11px;
+}
+
+.tabla-detalle th {
+    border: 1px solid #000;
+    background-color: #dcdcdc;
+    padding: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.tabla-detalle td {
+    border: 1px solid #000;
+    padding: 3px 5px;
+}
+
+.col-cant { width: 10%; }
+.col-desc { width: 55%; }
+.col-punit { width: 15%; }
+.col-importe { width: 15%; }
+.col-accion { width: 5%; }
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+/* Inputs dentro de la tabla */
+.input-cant, .input-punit {
+    width: 100%;
+    border: none;
+    text-align: center;
+    font-size: 11px;
+    font-family: Arial, sans-serif;
+    background: transparent;
+    outline: none;
+}
+
+.input-desc {
+    width: 100%;
+    border: none;
+    font-size: 11px;
+    font-family: Arial, sans-serif;
+    background: transparent;
+    outline: none;
+}
+
+.btn-eliminar {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 2px 6px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+/* Sección Totales, A cuenta y Saldo */
+.seccion-total {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.bloque-totales {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.total-box {
+    border: 2px solid #000;
+    display: flex;
+    width: 220px;
+    box-sizing: border-box;
+}
+
+.label-total {
+    background-color: #fff;
+    font-weight: 900;
+    padding: 5px 10px;
+    width: 100px;
+    text-align: center;
+    border-right: 2px solid #000;
+    font-size: 12px;
+}
+
+.monto-total {
+    padding: 5px 10px;
+    font-weight: bold;
+    text-align: right;
+    flex-grow: 1;
+    font-size: 12px;
+}
+
+.monto-input-container {
+    display: flex;
+    align-items: center;
+    padding: 2px 8px;
+    flex-grow: 1;
+    justify-content: flex-end;
+}
+
+.monto-input-container span {
+    font-weight: bold;
+    font-size: 12px;
+    margin-right: 4px;
+}
+
+.input-acuenta {
+    width: 80px;
+    border: none;
+    text-align: right;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    outline: none;
+    background: transparent;
+}
+
+.saldo-box {
+    background-color: #f9f9f9;
+}
+
+/* Reglas de Impresión */
+@media print {
+    .no-print { display: none !important; }
+    body { background: none; padding: 0; }
+    .proforma-container { border: none; width: 100%; margin: 0; padding: 0; }
+}
